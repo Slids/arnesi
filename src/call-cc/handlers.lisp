@@ -231,7 +231,7 @@
   (let ((exp (macroexpand var)))
     (if (eq var exp)
         (setf (symbol-value var) value)
-        (multiple-value-bind (dummies vals new setter getter)
+        (multiple-value-bind (dummies vals new setter)
             (get-setf-expansion var)
           (funcall (compile nil
                             `(lambda ()
