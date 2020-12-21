@@ -51,7 +51,8 @@ sequence of 64 bytes), return the coressponding double value."
                    ((position (peek) radix-array)
                     ;; the next char is a valid char
                     (setf integer-part (+ (* integer-part radix)
-                                          (position (next) radix-array)))
+                                          (or (position (next) radix-array)
+                                              (error "Bad radix"))))
                     ;; again
                     (return-from integer-part (integer-part)))
                    ((null (peek))
@@ -68,7 +69,8 @@ sequence of 64 bytes), return the coressponding double value."
                  (cond
                    ((position (peek) radix-array)
                     (setf mantissa (+ (* mantissa radix)
-                                      (position (next) radix-array))
+                                      (or (position (next) radix-array)
+                                          (error "Bad radix")))
                           mantissa-size (* mantissa-size radix))
                     (return-from mantissa
                       (mantissa)))
