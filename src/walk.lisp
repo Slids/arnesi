@@ -30,6 +30,7 @@
     (cons walk-env lexical-env)))
 
 (defun register-walk-env (env type name datum &rest other-datum)
+  (declare (ignore other-datum))
   (let ((walk-env (register (car env) type name datum))
         (lexenv (case type
                   (:let (augment-with-variable (cdr env) name))
@@ -452,7 +453,11 @@
     ;; all done
     func))
 
+(defclass allow-other-keys-function-argument-form (function-argument-form)
+  ())
+
 (defun walk-lambda-list (lambda-list parent env &key allow-specializers macro-p)
+  (declare (ignore macro-p))
   (flet ((extend-env (argument)
            (unless (typep argument 'allow-other-keys-function-argument-form)
              (extend-walk-env env :let (name argument) argument))))
@@ -554,9 +559,6 @@
                              :keyword-name keyword
                              :supplied-p-parameter supplied-p-parameter)
         (setf (default-value arg) (walk-form default-value arg env))))))
-
-(defclass allow-other-keys-function-argument-form (function-argument-form)
-  ())
 
 (defclass rest-function-argument-form (function-argument-form)
   ())
